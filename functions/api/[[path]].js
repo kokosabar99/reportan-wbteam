@@ -7,7 +7,7 @@ function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
 async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){
   const saltBytes=Uint8Array.from(salt);
   const key=await crypto.subtle.importKey('raw',encoder.encode(pass),{name:'PBKDF2'},false,['deriveBits']);
-  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:saltBytes,iterations:210000,hash:'SHA-256'},key,256);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:saltBytes,iterations:100000,hash:'SHA-256'},key,256);
   return b64(saltBytes)+':'+b64(new Uint8Array(bits));
 }
 async function verify(pass,stored){
@@ -53,7 +53,7 @@ const loginName=String(body.username||'').trim(),loginPassword=String(body.passw
 const user=await db.prepare('SELECT id,full_name,username,role,can_manage,password_hash FROM staff WHERE lower(username)=lower(?) AND active=TRUE').bind(loginName).first();
 if(!user){console.warn('Login rejected',{reason:'user_not_found_or_inactive'});return fail('Username atau password salah',401)}
 const passwordOk=await verify(loginPassword,user.password_hash);
-if(!passwordOk){console.warn('Login rejected',{reason:'password_mismatch',hashFormat:typeof user.password_hash==='string'&&user.password_hash.includes(':')?'salt:hash':'other',hashLength:user.password_hash?.length||0});return fail('Username atau password salah',401)}
+if(!passwordOk){console.warn('Login rejected',{reason:'password_mismatch_or_legacy_hash',hashFormat:typeof user.password_hash==='string'&&user.password_hash.includes(':')?'salt:hash':'other',hashLength:user.password_hash?.length||0});return fail('Username atau password salah',401)}
 const token=b64(crypto.getRandomValues(new Uint8Array(32))).replaceAll('+','-').replaceAll('/','_');await db.prepare("INSERT INTO sessions(token_hash,staff_id,expires_at) VALUES(?,?,NOW() + INTERVAL '7 days') RETURNING token_hash").bind(await sha(token),user.id).run();return json({token,staff:{id:user.id,full_name:user.full_name,role:user.role,can_manage:user.can_manage}})}
 if(route==='register'&&method==='POST'){
 const name=String(body.full_name||'').trim(),username=String(body.username||'').trim(),pass=String(body.password||'');if(!name||!/^\w{3,30}$/.test(username)||pass.length<8)return fail('Isi nama, username 3-30 karakter, dan password minimal 8 karakter');
