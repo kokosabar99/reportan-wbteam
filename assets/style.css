@@ -18,3 +18,12 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .category-history .row input{flex:2 1 260px}
 .category-history .row select{flex:1 1 160px}
 .category-history .tablewrap{max-width:100%;overflow-x:auto}
+
+/* Responsive report tabs, date filters, and settings */
+.category-tabs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}.category-tabs button{min-width:160px;padding:13px 20px}
+.category-history{min-width:0}.category-history .tablewrap{width:100%;overflow-x:auto}.category-history .table{min-width:750px}
+.history-filters{display:grid;grid-template-columns:repeat(2,minmax(150px,1fr));gap:12px;align-items:end;margin-bottom:15px}
+.history-filters label{margin:0;font-size:12px}.history-filters button{min-height:44px}
+.settings-layout{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:20px}
+.password-wrap{display:flex;position:relative;align-items:center}.password-wrap input{padding-right:54px}.eye-toggle{position:absolute;right:8px;background:transparent;color:inherit;padding:10px;border-radius:8px}.danger{background:#a72535!important}
+@media(max-width:600px){.history-filters{grid-template-columns:1fr}.category-tabs button{flex:1;min-width:0}}[hidden]{display:none!important}
