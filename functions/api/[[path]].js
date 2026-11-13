@@ -49,7 +49,11 @@ function convertSql(q){let n=0;return q.replace(/\?/g,()=>'$'+(++n)).replace(/da
 const url=new URL(request.url),route=url.pathname.replace(/^\/api\/?/,'').replace(/\/$/,'');const method=request.method;
 let body={};if(['POST','PATCH','PUT'].includes(method)){try{body=await request.json()}catch{return fail('JSON tidak valid')}}
 if(route==='login'&&method==='POST'){
-const user=await db.prepare('SELECT id,full_name,username,role,can_manage,password_hash FROM staff WHERE lower(username)=lower(?) AND active=TRUE').bind(String(body.username||'').trim()).first();if(!user||!(await verify(String(body.password||''),user.password_hash)))return fail('Username atau password salah',401);
+const loginName=String(body.username||'').trim(),loginPassword=String(body.password||'');
+const user=await db.prepare('SELECT id,full_name,username,role,can_manage,password_hash FROM staff WHERE lower(username)=lower(?) AND active=TRUE').bind(loginName).first();
+if(!user){console.warn('Login rejected',{reason:'user_not_found_or_inactive'});return fail('Username atau password salah',401)}
+const passwordOk=await verify(loginPassword,user.password_hash);
+if(!passwordOk){console.warn('Login rejected',{reason:'password_mismatch',hashFormat:typeof user.password_hash==='string'&&user.password_hash.includes(':')?'salt:hash':'other',hashLength:user.password_hash?.length||0});return fail('Username atau password salah',401)}
 const token=b64(crypto.getRandomValues(new Uint8Array(32))).replaceAll('+','-').replaceAll('/','_');await db.prepare("INSERT INTO sessions(token_hash,staff_id,expires_at) VALUES(?,?,NOW() + INTERVAL '7 days') RETURNING token_hash").bind(await sha(token),user.id).run();return json({token,staff:{id:user.id,full_name:user.full_name,role:user.role,can_manage:user.can_manage}})}
 if(route==='register'&&method==='POST'){
 const name=String(body.full_name||'').trim(),username=String(body.username||'').trim(),pass=String(body.password||'');if(!name||!/^\w{3,30}$/.test(username)||pass.length<8)return fail('Isi nama, username 3-30 karakter, dan password minimal 8 karakter');
