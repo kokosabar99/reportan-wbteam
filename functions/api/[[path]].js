@@ -1,21 +1,22 @@
 import { neon } from '@neondatabase/serverless';
-import { pbkdf2Sync, randomBytes } from 'node:crypto';
+import { pbkdf2 } from '@noble/hashes/pbkdf2';
+import { sha256 } from '@noble/hashes/sha256';
 const encoder=new TextEncoder();
 const json=(x,status=200)=>new Response(JSON.stringify(x),{status,headers:{'content-type':'application/json;charset=utf-8','cache-control':'no-store'}});
 async function sha(x){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',encoder.encode(x)))).map(b=>b.toString(16).padStart(2,'0')).join('')}
 function b64(bytes){return btoa(String.fromCharCode(...bytes))}
 function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
-async function hashPassword(pass,salt=randomBytes(16)){
+async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){
   const saltBytes=Uint8Array.from(salt);
-  const bits=pbkdf2Sync(pass,saltBytes,210000,32,'sha256');
+  const bits=pbkdf2(sha256,encoder.encode(pass),saltBytes,{c:210000,dkLen:32});
   return b64(saltBytes)+':'+b64(bits);
 }
 async function verify(pass,stored){
   if(typeof stored!=='string'||!pass)return false;
   const parts=stored.split(':');
   if(parts.length!==2)return false;
-  try {
-    const salt=unb64(parts[0]), expected=unb64(parts[1]);
+  try{
+    const salt=unb64(parts[0]),expected=unb64(parts[1]);
     if(salt.length!==16||expected.length!==32)return false;
     const actual=await hashPassword(pass,salt);
     const a=encoder.encode(actual),b=encoder.encode(stored);
