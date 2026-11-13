@@ -94,7 +94,16 @@ const latest=await db.prepare('SELECT COALESCE(MAX(id),0) AS id FROM audit').fir
 const rows=await db.prepare(`SELECT a.id,a.action,a.report_id,a.created_at,a.staff_id,s.full_name AS actor_name,r.type,r.subtype,r.user_id FROM audit a JOIN staff s ON s.id=a.staff_id LEFT JOIN reports r ON r.id=a.report_id WHERE a.id>? ORDER BY a.id ASC LIMIT 100`).bind(after).all();
 return json({latest_id:latest.id,items:rows.results});
 }
-if(route==='reports'&&method==='GET'){const from=url.searchParams.get('from'),to=url.searchParams.get('to'),type=url.searchParams.get('type');if((from&&!/^\d{4}-\d{2}-\d{2}$/.test(from))||(to&&!/^\d{4}-\d{2}-\d{2}$/.test(to))||(type&&!types.includes(type)))return fail('Filter tidak valid');let where=[],params=[];if(from){params.push(from);where.push('r.created_at >= 
+if(route==='reports'&&method==='GET'){
+ const from=url.searchParams.get('from'),to=url.searchParams.get('to'),type=url.searchParams.get('type');
+ if((from&&!/^\d{4}-\d{2}-\d{2}$/.test(from))||(to&&!/^\d{4}-\d{2}-\d{2}$/.test(to))||(type&&!types.includes(type)))return fail('Filter tidak valid');
+ const conditions=[],params=[];
+ if(from){params.push(from);conditions.push('r.created_at >= $'+params.length+'::date')}
+ if(to){params.push(to);conditions.push("r.created_at < ($"+params.length+"::date + INTERVAL '1 day')")}
+ if(type){params.push(type);conditions.push('r.type=$'+params.length)}
+ const query='SELECT r.*,a.full_name AS creator_name,b.full_name AS done_name FROM reports r JOIN staff a ON a.id=r.created_by LEFT JOIN staff b ON b.id=r.done_by'+(conditions.length?' WHERE '+conditions.join(' AND '):'')+" ORDER BY CASE WHEN r.status='WAITING' THEN 0 ELSE 1 END,r.created_at DESC LIMIT 10000";
+ return json({items:await sql.query(query,params)});
+}
 if(route==='reports'&&method==='POST'){
 let type=String(body.type||''),subtype=String(body.subtype||''),user=String(body.user_id||'').trim(),proof=String(body.proof||'').trim(),nominal=body.nominal===''||body.nominal==null?null:Number(String(body.nominal).replace(/[^\d]/g,'')),details=body.details||{};
 if(!types.includes(type))return fail('Jenis laporan tidak valid');if(!user&&type!=='PERMAINAN')return fail('User ID wajib diisi');if(type==='PERMAINAN'&&!['PL','SITUS'].includes(subtype))return fail('Pilih jenis permainan');if(type==='PERMAINAN'&&subtype==='PL'&&!user)return fail('User ID wajib');if(type==='PERMAINAN'&&subtype==='SITUS'&&!String(details.provider||'').trim())return fail('Provider wajib');if(type==='GANTI_REKENING'&&(!details.old_account||!details.new_account))return fail('Rekening lama dan baru wajib');if(type==='WITHDRAW'&&(!nominal||!details.withdraw_date||!details.order_id||!proof))return fail('Lengkapi data withdraw');if(['MANUAL_DEPOSIT','ACCEPT_DEPOSIT'].includes(type)&&(!nominal||!proof))return fail('Nominal dan bukti wajib');if(type==='PERMAINAN'&&!String(details.description||'').trim())return fail('Keterangan kendala wajib');
