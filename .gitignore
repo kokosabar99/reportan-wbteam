@@ -1,0 +1,6 @@
+database/seed.sql
+.dev.vars
+.env
+.env.*
+node_modules/
+.wrangler/
