@@ -13,7 +13,7 @@ export async function onRequest({request,env}){try{
 if(!env.DATABASE_URL)return fail('DATABASE_URL Neon belum diatur pada Cloudflare Pages',503);
 const sql=neon(env.DATABASE_URL);
 // Health check: confirms that the Pages Function can reach Neon without exposing secrets.
-const healthPath=new URL(request.url).pathname.replace(/\\/$/,'');
+const healthPath=new URL(request.url).pathname.replace(/\/$/,'');
 if(healthPath==='/api/health' && request.method==='GET'){
   try { await sql('SELECT 1 AS ok'); return json({ok:true,database:'connected'}); }
   catch(error){ console.error('Neon health check failed',{code:error?.code,message:error?.message}); return json({ok:false,database:'unavailable'},503); }
