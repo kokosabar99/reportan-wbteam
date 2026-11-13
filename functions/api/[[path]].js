@@ -4,7 +4,7 @@ const json=(x,status=200)=>new Response(JSON.stringify(x),{status,headers:{'cont
 async function sha(x){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',encoder.encode(x)))).map(b=>b.toString(16).padStart(2,'0')).join('')}
 function b64(bytes){return btoa(String.fromCharCode(...bytes))}
 function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
-async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){let key=await crypto.subtle.importKey('raw',encoder.encode(pass),'PBKDF2',false,['deriveBits']);let bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},key,256);return b64(salt)+':'+b64(new Uint8Array(bits))}
+async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){let key=await crypto.subtle.importKey('raw',encoder.encode(pass),'PBKDF2',false,['deriveBits']);let derived=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},key,{name:'HMAC',hash:'SHA-256',length:256},true,['sign']);let bits=await crypto.subtle.exportKey('raw',derived);return b64(salt)+':'+b64(new Uint8Array(bits))}
 async function verify(pass,stored){
   if(typeof stored!=='string'||!pass)return false;
   const parts=stored.split(':');
