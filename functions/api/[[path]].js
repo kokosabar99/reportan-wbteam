@@ -1,6 +1,4 @@
 import { neon } from '@neondatabase/serverless';
-import { pbkdf2 } from '@noble/hashes/pbkdf2';
-import { sha256 } from '@noble/hashes/sha256';
 const encoder=new TextEncoder();
 const json=(x,status=200)=>new Response(JSON.stringify(x),{status,headers:{'content-type':'application/json;charset=utf-8','cache-control':'no-store'}});
 async function sha(x){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',encoder.encode(x)))).map(b=>b.toString(16).padStart(2,'0')).join('')}
@@ -8,8 +6,9 @@ function b64(bytes){return btoa(String.fromCharCode(...bytes))}
 function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
 async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){
   const saltBytes=Uint8Array.from(salt);
-  const bits=pbkdf2(sha256,encoder.encode(pass),saltBytes,{c:210000,dkLen:32});
-  return b64(saltBytes)+':'+b64(bits);
+  const key=await crypto.subtle.importKey('raw',encoder.encode(pass),{name:'PBKDF2'},false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:saltBytes,iterations:210000,hash:'SHA-256'},key,256);
+  return b64(saltBytes)+':'+b64(new Uint8Array(bits));
 }
 async function verify(pass,stored){
   if(typeof stored!=='string'||!pass)return false;
@@ -23,7 +22,7 @@ async function verify(pass,stored){
     if(a.length!==b.length)return false;
     let diff=0;for(let i=0;i<a.length;i++)diff|=a[i]^b[i];
     return diff===0;
-  }catch(error){console.error('Password verification failed',{name:error?.name});return false}
+  }catch(error){console.error('Password verification failed',{name:error?.name,message:error?.message});return false}
 }
 async function auth(req,db){let t=(req.headers.get('authorization')||'').replace(/^Bearer /,'');if(!t)return null;return await db.prepare('SELECT s.id,s.full_name,s.username,s.role,s.can_manage FROM sessions x JOIN staff s ON s.id=x.staff_id WHERE x.token_hash=? AND x.expires_at>datetime(\'now\') AND s.active=TRUE').bind(await sha(t)).first()}
 function fail(msg,status=400){return json({error:msg},status)}
@@ -36,6 +35,14 @@ const healthPath=new URL(request.url).pathname.replace(/\/$/,'');
 if(healthPath==='/api/health' && request.method==='GET'){
   try { await sql`SELECT 1 AS ok`; return json({ok:true,database:'connected'}); }
   catch(error){ console.error('Neon health check failed',{code:error?.code,message:error?.message}); return json({ok:false,database:'unavailable'},503); }
+}
+if(healthPath==='/api/crypto-check' && request.method==='GET'){
+  const checks={};
+  try{const k=await crypto.subtle.importKey('raw',encoder.encode('test'),{name:'PBKDF2'},false,['deriveBits']);checks.importKey='ok';
+    try{await crypto.subtle.deriveBits({name:'PBKDF2',salt:new Uint8Array(16),iterations:1,hash:'SHA-256'},k,256);checks.deriveBits='ok'}
+    catch(e){checks.deriveBits=e?.name||'error'}
+  }catch(e){checks.importKey=e?.name||'error'}
+  return json({checks});
 }
 const db={prepare(query){let params=[];return {bind(...values){params=values;return this},async first(){const rows=await sql.query(convertSql(query),params);return rows[0]||null},async all(){return {results:await sql.query(convertSql(query),params)}},async run(){const q=convertSql(query);const rows=await sql.query(q,params);return {meta:{changes:rows.length||0,last_row_id:rows[0]?.id||null}}}}}};
 function convertSql(q){let n=0;return q.replace(/\?/g,()=>'$'+(++n)).replace(/datetime\('now'\)/g,'NOW()').replace(/ COLLATE NOCASE/g,'');}
