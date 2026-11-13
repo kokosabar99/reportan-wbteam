@@ -15,10 +15,10 @@ const sql=neon(env.DATABASE_URL);
 // Health check: confirms that the Pages Function can reach Neon without exposing secrets.
 const healthPath=new URL(request.url).pathname.replace(/\/$/,'');
 if(healthPath==='/api/health' && request.method==='GET'){
-  try { await sql('SELECT 1 AS ok'); return json({ok:true,database:'connected'}); }
+  try { await sql`SELECT 1 AS ok`; return json({ok:true,database:'connected'}); }
   catch(error){ console.error('Neon health check failed',{code:error?.code,message:error?.message}); return json({ok:false,database:'unavailable'},503); }
 }
-const db={prepare(query){let params=[];return {bind(...values){params=values;return this},async first(){const rows=await sql(convertSql(query),params);return rows[0]||null},async all(){return {results:await sql(convertSql(query),params)}},async run(){const q=convertSql(query);const rows=await sql(q,params);return {meta:{changes:rows.length||0,last_row_id:rows[0]?.id||null}}}}}};
+const db={prepare(query){let params=[];return {bind(...values){params=values;return this},async first(){const rows=await sql.query(convertSql(query),params);return rows[0]||null},async all(){return {results:await sql.query(convertSql(query),params)}},async run(){const q=convertSql(query);const rows=await sql.query(q,params);return {meta:{changes:rows.length||0,last_row_id:rows[0]?.id||null}}}}}};
 function convertSql(q){let n=0;return q.replace(/\?/g,()=>'$'+(++n)).replace(/datetime\('now'\)/g,'NOW()').replace(/ COLLATE NOCASE/g,'');}
 const url=new URL(request.url),route=url.pathname.replace(/^\/api\/?/,'').replace(/\/$/,'');const method=request.method;
 let body={};if(['POST','PATCH','PUT'].includes(method)){try{body=await request.json()}catch{return fail('JSON tidak valid')}}
