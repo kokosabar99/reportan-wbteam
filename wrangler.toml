@@ -1,5 +1,6 @@
 name = "reportan-wbteam"
 compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "."
 # Set DATABASE_URL as an encrypted secret in Cloudflare Pages Settings.
 # Do not put connection strings or passwords in this file.
