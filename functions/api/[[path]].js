@@ -1,10 +1,15 @@
 import { neon } from '@neondatabase/serverless';
+import { pbkdf2Sync, randomBytes } from 'node:crypto';
 const encoder=new TextEncoder();
 const json=(x,status=200)=>new Response(JSON.stringify(x),{status,headers:{'content-type':'application/json;charset=utf-8','cache-control':'no-store'}});
 async function sha(x){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',encoder.encode(x)))).map(b=>b.toString(16).padStart(2,'0')).join('')}
 function b64(bytes){return btoa(String.fromCharCode(...bytes))}
 function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
-async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){let key=await crypto.subtle.importKey('raw',encoder.encode(pass),'PBKDF2',false,['deriveBits']);let derived=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},key,{name:'HMAC',hash:'SHA-256',length:256},true,['sign']);let bits=await crypto.subtle.exportKey('raw',derived);return b64(salt)+':'+b64(new Uint8Array(bits))}
+async function hashPassword(pass,salt=randomBytes(16)){
+  const saltBytes=Uint8Array.from(salt);
+  const bits=pbkdf2Sync(pass,saltBytes,210000,32,'sha256');
+  return b64(saltBytes)+':'+b64(bits);
+}
 async function verify(pass,stored){
   if(typeof stored!=='string'||!pass)return false;
   const parts=stored.split(':');
@@ -12,20 +17,12 @@ async function verify(pass,stored){
   try {
     const salt=unb64(parts[0]), expected=unb64(parts[1]);
     if(salt.length!==16||expected.length!==32)return false;
-    // Cloudflare Workers WebCrypto does not support PBKDF2 deriveBits in every runtime.
-    // Use deriveKey into HMAC-SHA256, then export the raw 256-bit key.
-    const baseKey=await crypto.subtle.importKey('raw',encoder.encode(pass),'PBKDF2',false,['deriveKey']);
-    const derivedKey=await crypto.subtle.deriveKey(
-      {name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},
-      baseKey,{name:'HMAC',hash:'SHA-256',length:256},true,['sign']
-    );
-    const actual=b64(salt)+':'+b64(new Uint8Array(await crypto.subtle.exportKey('raw',derivedKey)));
-    const actualBytes=encoder.encode(actual), expectedBytes=encoder.encode(stored);
-    if(actualBytes.length!==expectedBytes.length)return false;
-    let diff=0;
-    for(let i=0;i<actualBytes.length;i++)diff|=actualBytes[i]^expectedBytes[i];
+    const actual=await hashPassword(pass,salt);
+    const a=encoder.encode(actual),b=encoder.encode(stored);
+    if(a.length!==b.length)return false;
+    let diff=0;for(let i=0;i<a.length;i++)diff|=a[i]^b[i];
     return diff===0;
-  } catch(e){console.error('Password verification failed',{name:e?.name});return false}
+  }catch(error){console.error('Password verification failed',{name:error?.name});return false}
 }
 async function auth(req,db){let t=(req.headers.get('authorization')||'').replace(/^Bearer /,'');if(!t)return null;return await db.prepare('SELECT s.id,s.full_name,s.username,s.role,s.can_manage FROM sessions x JOIN staff s ON s.id=x.staff_id WHERE x.token_hash=? AND x.expires_at>datetime(\'now\') AND s.active=TRUE').bind(await sha(t)).first()}
 function fail(msg,status=400){return json({error:msg},status)}
