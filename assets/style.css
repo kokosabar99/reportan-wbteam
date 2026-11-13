@@ -11,3 +11,10 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 
 /* Ensure auth/dashboard visibility follows the HTML hidden attribute despite display:grid/flex rules. */
 [hidden]{display:none!important}
+
+/* Per-category report history below its form and preview */
+.category-history{margin-top:22px;min-width:0}
+.category-history .row{margin-bottom:14px}
+.category-history .row input{flex:2 1 260px}
+.category-history .row select{flex:1 1 160px}
+.category-history .tablewrap{max-width:100%;overflow-x:auto}
