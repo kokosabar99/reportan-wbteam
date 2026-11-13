@@ -12,7 +12,14 @@ async function verify(pass,stored){
   try {
     const salt=unb64(parts[0]), expected=unb64(parts[1]);
     if(salt.length!==16||expected.length!==32)return false;
-    const actual=await hashPassword(pass,salt);
+    // Cloudflare Workers WebCrypto does not support PBKDF2 deriveBits in every runtime.
+    // Use deriveKey into HMAC-SHA256, then export the raw 256-bit key.
+    const baseKey=await crypto.subtle.importKey('raw',encoder.encode(pass),'PBKDF2',false,['deriveKey']);
+    const derivedKey=await crypto.subtle.deriveKey(
+      {name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},
+      baseKey,{name:'HMAC',hash:'SHA-256',length:256},true,['sign']
+    );
+    const actual=b64(salt)+':'+b64(new Uint8Array(await crypto.subtle.exportKey('raw',derivedKey)));
     const actualBytes=encoder.encode(actual), expectedBytes=encoder.encode(stored);
     if(actualBytes.length!==expectedBytes.length)return false;
     let diff=0;
