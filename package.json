@@ -1,0 +1,9 @@
+{
+  "name": "reportan-wbteam",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0"
+  }
+}
