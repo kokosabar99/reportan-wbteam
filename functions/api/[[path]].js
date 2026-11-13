@@ -5,7 +5,21 @@ async function sha(x){return Array.from(new Uint8Array(await crypto.subtle.diges
 function b64(bytes){return btoa(String.fromCharCode(...bytes))}
 function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
 async function hashPassword(pass,salt=crypto.getRandomValues(new Uint8Array(16))){let key=await crypto.subtle.importKey('raw',encoder.encode(pass),'PBKDF2',false,['deriveBits']);let bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},key,256);return b64(salt)+':'+b64(new Uint8Array(bits))}
-async function verify(pass,stored){if(!stored)return false;let [s]=stored.split(':');return await hashPassword(pass,unb64(s))===stored}
+async function verify(pass,stored){
+  if(typeof stored!=='string'||!pass)return false;
+  const parts=stored.split(':');
+  if(parts.length!==2)return false;
+  try {
+    const salt=unb64(parts[0]), expected=unb64(parts[1]);
+    if(salt.length!==16||expected.length!==32)return false;
+    const actual=await hashPassword(pass,salt);
+    const actualBytes=encoder.encode(actual), expectedBytes=encoder.encode(stored);
+    if(actualBytes.length!==expectedBytes.length)return false;
+    let diff=0;
+    for(let i=0;i<actualBytes.length;i++)diff|=actualBytes[i]^expectedBytes[i];
+    return diff===0;
+  } catch(e){console.error('Password verification failed',{name:e?.name});return false}
+}
 async function auth(req,db){let t=(req.headers.get('authorization')||'').replace(/^Bearer /,'');if(!t)return null;return await db.prepare('SELECT s.id,s.full_name,s.username,s.role,s.can_manage FROM sessions x JOIN staff s ON s.id=x.staff_id WHERE x.token_hash=? AND x.expires_at>datetime(\'now\') AND s.active=TRUE').bind(await sha(t)).first()}
 function fail(msg,status=400){return json({error:msg},status)}
 const types=['MANUAL_DEPOSIT','ACCEPT_DEPOSIT','WITHDRAW','GANTI_REKENING','PERMAINAN'];
@@ -23,7 +37,7 @@ function convertSql(q){let n=0;return q.replace(/\?/g,()=>'$'+(++n)).replace(/da
 const url=new URL(request.url),route=url.pathname.replace(/^\/api\/?/,'').replace(/\/$/,'');const method=request.method;
 let body={};if(['POST','PATCH','PUT'].includes(method)){try{body=await request.json()}catch{return fail('JSON tidak valid')}}
 if(route==='login'&&method==='POST'){
-const user=await db.prepare('SELECT * FROM staff WHERE lower(username)=lower(?) AND active=TRUE').bind(String(body.username||'').trim()).first();if(!user||!(await verify(String(body.password||''),user.password_hash)))return fail('Username atau password salah',401);
+const user=await db.prepare('SELECT id,full_name,username,role,can_manage,password_hash FROM staff WHERE lower(username)=lower(?) AND active=TRUE').bind(String(body.username||'').trim()).first();if(!user||!(await verify(String(body.password||''),user.password_hash)))return fail('Username atau password salah',401);
 const token=b64(crypto.getRandomValues(new Uint8Array(32))).replaceAll('+','-').replaceAll('/','_');await db.prepare("INSERT INTO sessions(token_hash,staff_id,expires_at) VALUES(?,?,NOW() + INTERVAL '7 days') RETURNING token_hash").bind(await sha(token),user.id).run();return json({token,staff:{id:user.id,full_name:user.full_name,role:user.role,can_manage:user.can_manage}})}
 if(route==='register'&&method==='POST'){
 const name=String(body.full_name||'').trim(),username=String(body.username||'').trim(),pass=String(body.password||'');if(!name||!/^\w{3,30}$/.test(username)||pass.length<8)return fail('Isi nama, username 3-30 karakter, dan password minimal 8 karakter');
