@@ -94,7 +94,7 @@ const latest=await db.prepare('SELECT COALESCE(MAX(id),0) AS id FROM audit').fir
 const rows=await db.prepare(`SELECT a.id,a.action,a.report_id,a.created_at,a.staff_id,s.full_name AS actor_name,r.type,r.subtype,r.user_id FROM audit a JOIN staff s ON s.id=a.staff_id LEFT JOIN reports r ON r.id=a.report_id WHERE a.id>? ORDER BY a.id ASC LIMIT 100`).bind(after).all();
 return json({latest_id:latest.id,items:rows.results});
 }
-const reportMatch=route.match(/^reports\\/(\\d+)$/);
+const reportMatch=route.match(/^reports\/(\d+)$/);
 if(reportMatch&&(method==='PATCH'||method==='DELETE')){
  const id=Number(reportMatch[1]);const found=await sql.query('SELECT id,created_by,type,details FROM reports WHERE id=$1',[id]);if(!found.length)return fail('Laporan tidak ditemukan',404);
  if(Number(found[0].created_by)!==Number(staff.id)&&!['KAPTEN KASIR','CS LINE'].includes(staff.role))return fail('Tidak diizinkan mengubah laporan staff lain',403);
