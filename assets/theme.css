@@ -118,3 +118,21 @@ html[data-theme="dark"] .report-modal-close{background:#283b58!important;color:#
 html[data-theme="dark"] .completion-panel,html[data-theme="dark"] .edit-report-dialog,html[data-theme="dark"] .delete-report-dialog{background:#152238!important;color:#edf4ff!important}
 html[data-theme="dark"] .completion-panel h2,html[data-theme="dark"] .edit-report-dialog h2,html[data-theme="dark"] .delete-report-dialog h2{color:#f3f7ff!important}
 html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator{filter:brightness(0) invert(1)!important;opacity:1!important}
+
+/* Ensure creator and status remain readable on the light meta strip in dark mode. */
+html[data-theme="dark"] .report-modal .report-modal-meta{
+  background:#1e304a!important;
+  border:1px solid #3a5272!important;
+  border-radius:12px!important;
+  padding:12px 14px!important;
+  margin-bottom:14px!important;
+}
+html[data-theme="dark"] .report-modal .report-modal-meta span{
+  color:#f0f6ff!important;
+  opacity:1!important;
+  font-weight:600!important;
+  text-shadow:none!important;
+}
+html[data-theme="dark"] .report-modal .report-modal-meta span:last-child:not(:first-child){
+  color:#b8f5dc!important;
+}
