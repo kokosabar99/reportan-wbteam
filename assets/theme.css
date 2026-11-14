@@ -29,3 +29,36 @@ html[data-theme="dark"] .report-modal-body,html[data-theme="dark"] .report-modal
 html[data-theme="dark"] .report-preview,html[data-theme="dark"] .completion-card{background:#101c30;color:#e8f0ff;border-color:#344a68}
 #themeToggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;min-height:44px}
 @media(max-width:650px){#themeToggle{font-size:12px;padding:8px!important;min-height:38px}}
+
+/* Contrast repair: the light theme sets fixed dark heading colors. */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] .card h1,
+html[data-theme="dark"] .card h2,
+html[data-theme="dark"] .card h3,
+html[data-theme="dark"] #pageTitle,
+html[data-theme="dark"] .report-modal-header h2,
+html[data-theme="dark"] .completion-heading h2,
+html[data-theme="dark"] .staff-dialog h2{color:#f2f6ff!important}
+html[data-theme="dark"] #who,
+html[data-theme="dark"] .sidebottom #who,
+html[data-theme="dark"] .sidebottom #who b{color:#e0eaff!important}
+html[data-theme="dark"] .stat b,
+html[data-theme="dark"] .stat:nth-child(2) b,
+html[data-theme="dark"] .stat:nth-child(3) b,
+html[data-theme="dark"] .stat:nth-child(4) b{color:#f1f6ff}
+html[data-theme="dark"] .stat span,
+html[data-theme="dark"] .empty,
+html[data-theme="dark"] .card p,
+html[data-theme="dark"] .card .muted{color:#b7c8df}
+html[data-theme="dark"] .report-modal-body pre,
+html[data-theme="dark"] .report-preview,
+html[data-theme="dark"] .completion-card{color:#f0f5ff!important}
+html[data-theme="dark"] .completion-heading p,
+html[data-theme="dark"] .report-modal-header h2 small{color:#b4c5dc}
+html[data-theme="dark"] .settings-layout .card,
+html[data-theme="dark"] .settings-layout p{color:#d7e4f6}
+html[data-theme="dark"] .table tbody tr.report-row-waiting>td{color:#ffe1a2}
+html[data-theme="dark"] .table tbody tr.report-row-done>td{color:#b3f2d6}
