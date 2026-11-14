@@ -72,8 +72,29 @@ if(route==='report-templates'&&(method==='GET'||method==='PUT')){
 }
 if(route==='me'&&method==='GET')return json({staff});
 if(route==='logout'&&method==='POST'){const t=(request.headers.get('authorization')||'').slice(7);await db.prepare('DELETE FROM sessions WHERE token_hash=? RETURNING token_hash').bind(await sha(t)).run();return json({ok:true})}
-if(route==='staff'&&method==='GET'){if(!staff.can_manage)return fail('Tidak diizinkan',403);return json({items:(await db.prepare('SELECT id,full_name,username,role,active,can_manage,created_at FROM staff ORDER BY id DESC').all()).results})}
+if(route==='staff'&&method==='GET'){if(!staff.can_manage)return fail('Tidak diizinkan',403);return json({items:(await db.prepare('SELECT id,full_name,username,role,active,can_manage,created_at FROM staff WHERE active=TRUE ORDER BY id DESC').all()).results})}
 if(route==='staff'&&method==='POST'){if(!staff.can_manage)return fail('Tidak diizinkan',403);let name=String(body.full_name||'').trim(),role=String(body.role||'');if(!name||!['CS LINE','KAPTEN KASIR','CS LC','KASIR'].includes(role))return fail('Nama/role tidak valid');try{await db.prepare('INSERT INTO staff(full_name,role,can_manage) VALUES(?,?,?) RETURNING id').bind(name,role,['CS LINE','KAPTEN KASIR'].includes(role)).run();return json({ok:true})}catch{return fail('Nama sudah ada')}}
+const staffMatch=route.match(/^staff\/(\d+)$/);
+if(staffMatch&&(method==='PATCH'||method==='DELETE')){
+ if(!staff.can_manage)return fail('Tidak diizinkan',403);
+ const id=Number(staffMatch[1]);
+ const target=await db.prepare('SELECT id,full_name,username,role,active FROM staff WHERE id=? AND active=TRUE').bind(id).first();
+ if(!target)return fail('Staff tidak ditemukan',404);
+ if(method==='PATCH'){
+  const full_name=String(body.full_name||'').trim(),role=String(body.role||'');
+  if(!full_name||full_name.length>150||!['CS LINE','KAPTEN KASIR','CS LC','KASIR'].includes(role))return fail('Nama atau role tidak valid');
+  try{await db.prepare('UPDATE staff SET full_name=?,role=?,can_manage=? WHERE id=? RETURNING id').bind(full_name,role,['CS LINE','KAPTEN KASIR'].includes(role),id).run();return json({ok:true})}
+  catch(e){if(e?.code==='23505'||/unique/i.test(e?.message||''))return fail('Nama sudah digunakan',409);throw e}
+ }
+ if(Number(staff.id)===id)return fail('Tidak dapat menghapus akun sendiri',403);
+ if(target.username){
+  await db.prepare('UPDATE staff SET active=FALSE WHERE id=? RETURNING id').bind(id).run();
+  await db.prepare('DELETE FROM sessions WHERE staff_id=? RETURNING token_hash').bind(id).run();
+ }else{
+  await db.prepare('DELETE FROM staff WHERE id=? RETURNING id').bind(id).run();
+ }
+ return json({ok:true});
+}
 if(route==='password'&&method==='POST'){
  const current=String(body.current_password||''),next=String(body.new_password||'');
  if(next.length<8||next.length>128)return fail('Password baru harus 8-128 karakter');
