@@ -67,3 +67,8 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .search-clear-wrap>input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
 .search-clear-btn{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;background:#edf2fa;color:#5a6c86;font-size:21px;font-weight:400;line-height:1;cursor:pointer;padding:0}
 .search-clear-btn:hover,.search-clear-btn:focus-visible{background:#dfe9fb;color:#2754ad;outline:2px solid transparent}
+
+/* History filter order: search, status, dates, actions */
+.category-history .history-filters .category-search-row{grid-column:1/-1}
+.category-history .history-filters .category-status-row{grid-column:1/-1}
+@media(max-width:600px){.category-history .history-filters .category-search-row,.category-history .history-filters .category-status-row{grid-column:1}}
