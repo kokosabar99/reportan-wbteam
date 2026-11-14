@@ -1,0 +1,31 @@
+/* WDBOS theme override — light remains the existing default. */
+html[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--surface:#152238;--edge:#2b3d58;--text:#e8f0ff;--muted:#a5b5cc}
+html[data-theme="dark"] body{background:linear-gradient(135deg,#0b1220,#101d31 60%,#0b1728);color:#e8f0ff}
+html[data-theme="dark"] aside{background:#101b2d;border-color:#2a3b54}
+html[data-theme="dark"] .brand{color:#edf4ff}
+html[data-theme="dark"] .side-caption,html[data-theme="dark"] .breadcrumb,html[data-theme="dark"] .muted,html[data-theme="dark"] .hint,html[data-theme="dark"] small{color:#a4b6d0}
+html[data-theme="dark"] nav button{color:#c0cfe5}
+html[data-theme="dark"] nav button:hover,html[data-theme="dark"] nav button.active{background:#223754;color:#a9c5ff;border-color:#365477}
+html[data-theme="dark"] .card,html[data-theme="dark"] .report-modal,html[data-theme="dark"] .staff-dialog,html[data-theme="dark"] .completion-panel,html[data-theme="dark"] .edit-report-dialog,html[data-theme="dark"] .delete-report-dialog,html[data-theme="dark"] [data-settings-panel]{background:#152238;color:#e8f0ff;border-color:#2b3d58}
+html[data-theme="dark"] .table,html[data-theme="dark"] .tablewrap{background:#152238;border-color:#2b3d58}
+html[data-theme="dark"] .table th{background:#1c2d46;color:#b9cbe5}
+html[data-theme="dark"] .table td{color:#e0eaf9;border-color:#2b3d58}
+html[data-theme="dark"] .table tbody tr:hover td{background:#20334e}
+html[data-theme="dark"] .table tbody tr.report-row-waiting>td{background:#3b301d!important;color:#ffe1a2}
+html[data-theme="dark"] .table tbody tr.report-row-done>td{background:#143c34!important;color:#b3f2d6}
+html[data-theme="dark"] .table tbody tr.report-row-note>td{background:#152238!important}
+html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select,html[data-theme="dark"] pre,html[data-theme="dark"] .report-modal-body pre,html[data-theme="dark"] .edit-report-fields textarea,html[data-theme="dark"] .completion-panel textarea{background:#101c30;color:#edf4ff;border-color:#344a68}
+html[data-theme="dark"] input:focus,html[data-theme="dark"] textarea:focus,html[data-theme="dark"] select:focus{background:#14243c}
+html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#92a8c4}
+html[data-theme="dark"] label{color:#c6d5eb}
+html[data-theme="dark"] .ghost,html[data-theme="dark"] .pill,html[data-theme="dark"] .tabs button,html[data-theme="dark"] .settings-tab,html[data-theme="dark"] .report-modal-close,html[data-theme="dark"] .report-modal-actions button:not(.primary):not(.danger){background:#22344e;color:#e0ebfc;border-color:#36506e}
+html[data-theme="dark"] .settings-tab.active,html[data-theme="dark"] .tabs .selected{background:#315fcb;color:#fff}
+html[data-theme="dark"] .auth{background:radial-gradient(ellipse at 20% 10%,#1d3154,transparent 50%),#0b1220}
+html[data-theme="dark"] .login-divider span{color:#a6bad4}
+html[data-theme="dark"] header .header-tools #clock{background:#22344e;color:#edf4ff;border-color:#36506e}
+html[data-theme="dark"] .badge.wait{background:#49371d;color:#ffda89;border-color:#80602b}
+html[data-theme="dark"] .badge.done{background:#174335;color:#a1f1cd;border-color:#24664d}
+html[data-theme="dark"] .report-modal-body,html[data-theme="dark"] .report-modal-header,html[data-theme="dark"] .report-modal-actions{border-color:#2b3d58}
+html[data-theme="dark"] .report-preview,html[data-theme="dark"] .completion-card{background:#101c30;color:#e8f0ff;border-color:#344a68}
+#themeToggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;min-height:44px}
+@media(max-width:650px){#themeToggle{font-size:12px;padding:8px!important;min-height:38px}}
