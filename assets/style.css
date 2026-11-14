@@ -169,3 +169,11 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 #content > .columns > .card:nth-child(2) .table td .row{display:flex;flex-wrap:wrap;gap:5px;}
 #content > .columns > .card:nth-child(2) .table td .row button{font-size:12px;padding:7px 9px;min-width:0;white-space:nowrap;}
 @media(max-width:1100px){#content > .columns:has(#wlForm){grid-template-columns:minmax(0,1fr)}#content > .columns > .card:nth-child(2) .table th,#content > .columns > .card:nth-child(2) .table td{font-size:13px;padding:12px 10px}}
+
+/* Full-row status cues in activity and report-history tables. */
+.table tbody tr.report-row-waiting > td{background:#fff8e8!important;border-bottom-color:#f5e6bc}
+.table tbody tr.report-row-done > td{background:#eaf8f0!important;border-bottom-color:#d0eadc}
+.table tbody tr.report-row-note > td{background:#fff!important}
+.table tbody tr.report-row-waiting:hover > td{background:#fff0ce!important}
+.table tbody tr.report-row-done:hover > td{background:#ddf2e6!important}
+.table tbody tr.report-row-note:hover > td{background:#f5f8fd!important}
