@@ -72,3 +72,28 @@ html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-text,
 html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-month-field,
 html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-day-field,
 html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-year-field{color:#f0f5ff!important}
+
+/* Compact icon-only sidebar, with saved expand/collapse state. */
+#app>aside{position:sticky;transition:width .22s ease,padding .22s ease;min-width:0}
+#app>main{min-width:0;flex:1}
+.sidebar-toggle{display:flex;align-items:center;justify-content:center;align-self:flex-end;width:34px;height:34px;min-height:34px;border-radius:10px;background:#eaf0fb;color:#315fbd;border:1px solid #d4e1f3;cursor:pointer;flex:none;font-size:15px;transition:background .18s,transform .18s}
+.sidebar-toggle:hover{background:#dbe8ff;transform:scale(1.05)}
+html[data-theme="dark"] .sidebar-toggle{background:#233955;color:#dceaff;border-color:#3b5577}
+html[data-theme="dark"] .sidebar-toggle:hover{background:#305078}
+#app.sidebar-collapsed>aside{width:82px!important;min-width:82px!important;padding:20px 10px!important;gap:18px!important}
+#app.sidebar-collapsed>aside .brand,#app.sidebar-collapsed>aside .side-caption,#app.sidebar-collapsed>aside #who{display:none!important}
+#app.sidebar-collapsed>aside nav{display:flex;flex-direction:column;gap:8px;overflow:visible}
+#app.sidebar-collapsed>aside nav button{width:100%;min-width:0;display:flex;justify-content:center;align-items:center;padding:9px 5px;gap:0;min-height:49px;overflow:hidden}
+#app.sidebar-collapsed>aside nav button>span:not(.nav-icon){display:none!important}
+#app.sidebar-collapsed>aside nav .nav-icon{margin:0;flex-shrink:0}
+#app.sidebar-collapsed>aside .sidebottom{margin-top:auto;padding-top:12px}
+#app.sidebar-collapsed>aside .sidebottom button{font-size:0!important;display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;padding:6px!important}
+#app.sidebar-collapsed>aside .sidebottom button::before{content:"↗";font-size:22px;line-height:1}
+#app.sidebar-collapsed>aside .sidebar-toggle{align-self:center}
+@media(max-width:650px){
+#app.sidebar-collapsed>aside{width:100%!important;min-width:0!important;position:relative;height:auto;padding:12px!important}
+#app.sidebar-collapsed>aside nav{display:flex;flex-direction:row;overflow-x:auto;gap:6px}
+#app.sidebar-collapsed>aside nav button{width:46px;min-width:46px}
+#app.sidebar-collapsed>aside .sidebottom{margin-top:0;padding-top:0}
+#app.sidebar-collapsed>aside .sidebottom button{width:46px}
+}
