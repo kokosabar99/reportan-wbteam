@@ -249,3 +249,39 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
   #content > .columns:has(#wlForm) > .card:nth-child(2) .table td .row{flex-wrap:wrap}
   #content > .columns:has(#wlForm) > .card:nth-child(2) .table td .row button{flex:1 1 100%}
 }
+
+/* Final compact history filter layout: two main columns, each stacked internally. */
+.category-history .history-filters{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  grid-template-rows:repeat(3,auto)!important;
+  gap:10px 14px!important;
+  align-items:end;
+}
+.category-history .history-filters>.category-search-row{grid-column:1!important;grid-row:1!important}
+.category-history .history-filters>.category-status-row{grid-column:1!important;grid-row:2!important;align-self:end}
+.category-history .history-filters>label:has(#categoryFrom){grid-column:2!important;grid-row:1!important}
+.category-history .history-filters>label:has(#categoryTo){grid-column:2!important;grid-row:2!important}
+.category-history .history-filters>#categoryLoad{grid-column:1!important;grid-row:3!important}
+.category-history .history-filters>#categoryReset{grid-column:2!important;grid-row:3!important}
+.category-history .history-filters>.category-search-row,
+.category-history .history-filters>label,
+.category-history .history-filters>select,
+.category-history .history-filters>button{width:100%;min-width:0;box-sizing:border-box}
+.category-history .history-filters>.category-search-row{display:flex;gap:8px}
+.category-history .history-filters>.category-search-row input{min-width:0;flex:1}
+.category-history .history-filters>.category-search-row button{flex:0 0 42px}
+@media(max-width:620px){
+  .category-history .history-filters{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important}
+  .category-history .history-filters>.category-search-row,
+  .category-history .history-filters>.category-status-row,
+  .category-history .history-filters>label:has(#categoryFrom),
+  .category-history .history-filters>label:has(#categoryTo),
+  .category-history .history-filters>#categoryLoad,
+  .category-history .history-filters>#categoryReset{grid-column:1!important;grid-row:auto!important}
+}
+/* Staff action column: allow both labels and icons to remain fully visible. */
+#content>.columns:has(#wlForm)>.card:nth-child(2) .table{width:100%;table-layout:auto;min-width:0}
+#content>.columns:has(#wlForm)>.card:nth-child(2) .table td:last-child{width:174px;min-width:174px}
+#content>.columns:has(#wlForm)>.card:nth-child(2) .table td .row{gap:8px!important;flex-wrap:nowrap!important}
+#content>.columns:has(#wlForm)>.card:nth-child(2) .table td .row button{flex:0 0 auto!important;min-width:75px!important;max-width:none!important;padding:8px 9px!important}
