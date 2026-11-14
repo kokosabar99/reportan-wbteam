@@ -112,3 +112,20 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 
 /* Keep copy/save notifications above both report and edit dialogs. */
 #toast{z-index:2147483647!important;position:fixed!important;top:20px;right:20px;left:auto;bottom:auto;display:none;box-shadow:0 16px 44px rgba(10,30,65,.28);}
+
+/* Premium permanent-delete confirmation */
+.delete-report-backdrop{z-index:110000}
+.delete-report-panel{width:min(100%,470px);padding:28px;border-radius:24px;box-shadow:0 28px 90px rgba(9,25,53,.34)}
+.delete-report-icon{background:#fff0f1;color:#b4233c;font-size:23px}
+.delete-report-kicker{color:#b4233c}
+.delete-report-panel .completion-heading{margin-bottom:17px;padding-bottom:18px}
+.delete-report-description{font-size:14px;line-height:1.7;color:#53647e;background:#fff7f7;border:1px solid #f8dfe2;border-radius:13px;padding:15px 16px;margin:0 0 24px}
+.delete-report-description strong{color:#a61d34;font-weight:700}
+.delete-report-actions{gap:12px}
+.delete-report-actions button{min-height:44px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.delete-report-actions button:not(:disabled):hover{transform:translateY(-2px)}
+.delete-report-confirm{border:1px solid #a91f37;background:linear-gradient(135deg,#c52d48,#a51e35);color:white;border-radius:11px;font-weight:700;box-shadow:0 8px 20px rgba(173,30,56,.2)}
+.delete-report-confirm:not(:disabled):hover{background:linear-gradient(135deg,#d33a54,#a51e35);box-shadow:0 11px 24px rgba(173,30,56,.28)}
+.delete-report-actions button:focus-visible{outline:3px solid #93b5ff;outline-offset:3px}
+.delete-report-actions button:disabled{opacity:.65;cursor:wait}
+@media(max-width:500px){.delete-report-panel{padding:22px}.delete-report-actions{flex-wrap:wrap}.delete-report-actions button{flex:1}}
