@@ -285,3 +285,9 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 #content>.columns:has(#wlForm)>.card:nth-child(2) .table td:last-child{width:174px;min-width:174px}
 #content>.columns:has(#wlForm)>.card:nth-child(2) .table td .row{gap:8px!important;flex-wrap:nowrap!important}
 #content>.columns:has(#wlForm)>.card:nth-child(2) .table td .row button{flex:0 0 auto!important;min-width:75px!important;max-width:none!important;padding:8px 9px!important}
+
+/* Center all Settings tabs and the active settings panel on desktop. */
+#content .settings-tabs{width:100%;max-width:760px;margin:0 auto 18px;box-sizing:border-box}
+#content .settings-layout:has([data-settings-panel]){width:100%;max-width:760px;margin-left:auto;margin-right:auto;box-sizing:border-box}
+#content .settings-layout [data-settings-panel]{max-width:100%;min-width:0}
+@media(max-width:620px){#content .settings-tabs{justify-content:center}#content .settings-tab{flex:1 1 auto;text-align:center}}
