@@ -155,3 +155,47 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 /* Premium completion detail for issue reports */
 .resolution-card{margin-top:20px;border:1px solid #cde9dd;border-radius:18px;padding:20px 22px;background:linear-gradient(145deg,#f4fcf8,#fff);box-shadow:0 8px 24px rgba(17,120,77,.06);color:#213b35}
 .resolution-heading{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #dbeee5}.resolution-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#d9f5e8;color:#087e54;font-size:24px;font-weight:700}.resolution-kicker{font-size:11px;letter-spacing:1.2px;font-weight:800;color:#078455}.resolution-heading h3{margin:3px 0 0;font-size:18px;color:#193e31}.resolution-badge{margin-left:auto;background:#d9f5e8;color:#087e54;border-radius:30px;padding:7px 12px;font-size:11px;font-weight:800}.resolution-info{display:flex;flex-direction:column;gap:5px;margin-top:15px}.resolution-label{font-size:12px;font-weight:700;color:#658479}.resolution-info strong{font-size:15px;color:#23443a}.resolution-info p{margin:0;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;color:#23443a}
+
+/* Staff directory: fit all four columns inside its card without horizontal scrolling. */
+#content > .columns > .card:nth-child(2) .tablewrap{overflow-x:visible;max-width:100%;}
+#content > .columns > .card:nth-child(2) .table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse;}
+#content > .columns > .card:nth-child(2) .table th:first-child,
+#content > .columns > .card:nth-child(2) .table td:first-child{min-width:0;width:35%;}
+#content > .columns > .card:nth-child(2) .table th:nth-child(2){width:19%;}
+#content > .columns > .card:nth-child(2) .table th:nth-child(3){width:21%;}
+#content > .columns > .card:nth-child(2) .table th:nth-child(4){width:25%;}
+#content > .columns > .card:nth-child(2) .table th,
+#content > .columns > .card:nth-child(2) .table td{padding:11px 8px;white-space:normal;overflow-wrap:anywhere;vertical-align:middle;font-size:12px;}
+#content > .columns > .card:nth-child(2) .table td .row{display:flex;flex-wrap:wrap;gap:5px;}
+#content > .columns > .card:nth-child(2) .table td .row button{font-size:12px;padding:7px 9px;min-width:0;white-space:nowrap;}
+@media(max-width:1100px){#content > .columns:has(#wlForm){grid-template-columns:minmax(0,1fr)}#content > .columns > .card:nth-child(2) .table th,#content > .columns > .card:nth-child(2) .table td{font-size:13px;padding:12px 10px}}
+
+/* Full-row status cues in activity and report-history tables. */
+.table tbody tr.report-row-waiting > td{background:#fff8e8!important;border-bottom-color:#f5e6bc}
+.table tbody tr.report-row-done > td{background:#eaf8f0!important;border-bottom-color:#d0eadc}
+.table tbody tr.report-row-note > td{background:#fff!important}
+.table tbody tr.report-row-waiting:hover > td{background:#fff0ce!important}
+.table tbody tr.report-row-done:hover > td{background:#ddf2e6!important}
+.table tbody tr.report-row-note:hover > td{background:#f5f8fd!important}
+
+/* Center the empty-report message across the complete table, regardless of column widths. */
+.table tbody tr:has(> td.empty) > td.empty{display:table-cell!important;width:auto!important;min-width:0!important;text-align:center!important;vertical-align:middle!important;padding:24px 12px!important;color:#64748b}
+
+/* Settings: three independent actions, one visible form at a time. */
+.settings-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.settings-tab{border:1px solid #d9e3f4;border-radius:12px;background:#f1f5fb;color:#435674;font:inherit;font-weight:700;padding:12px 18px;cursor:pointer;transition:background .18s,transform .18s,box-shadow .18s}
+.settings-tab:hover{background:#e4edff;transform:translateY(-1px)}
+.settings-tab.active{background:#315fdf;color:white;border-color:#315fdf;box-shadow:0 6px 15px #315fdf25}
+.settings-layout:has([data-settings-panel]){display:block;max-width:760px}
+.settings-layout [data-settings-panel][hidden]{display:none!important}
+.settings-layout [data-settings-panel]{width:100%;box-sizing:border-box}
+
+/* Keep category history filters compact instead of stretching across the report card. */
+.category-history .history-filters{width:100%;max-width:740px;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:12px;row-gap:10px;align-items:end}
+.category-history .history-filters .category-search-row{grid-column:1;min-width:0}
+.category-history .history-filters .category-status-row{grid-column:2;min-width:0}
+.category-history .history-filters:has(.category-search-row):not(:has(.category-status-row)) .category-search-row{grid-column:1/-1}
+.category-history .history-filters label{max-width:100%}
+.category-history .history-filters input[type=date]{height:40px}
+.category-history .history-filters #categoryLoad,.category-history .history-filters #categoryReset{width:100%;height:40px}
+@media(max-width:540px){.category-history .history-filters{max-width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.category-history .history-filters .category-search-row{grid-column:1/-1}.category-history .history-filters .category-status-row{grid-column:1/-1}}
