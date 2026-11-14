@@ -75,3 +75,10 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .category-history .history-filters .category-status-row{grid-column:2}
 .category-history .history-filters:has(.category-search-row):not(:has(.category-status-row)) .category-search-row{grid-column:1/-1}
 @media(max-width:600px){.category-history .history-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.category-history .history-filters .category-search-row,.category-history .history-filters .category-status-row{grid-column:auto}}
+
+/* Privileged, per-category report format editor */
+#templateSettings{min-width:0}
+#templateSettings #templateBody{display:block;width:100%;min-height:240px;max-height:55vh;box-sizing:border-box;resize:vertical;white-space:pre-wrap;font:400 13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;border:1px solid #d8e3f3;border-radius:12px;background:#f8faff;padding:14px;color:#203451}
+#templateSettings #templateType{width:100%;max-width:100%;box-sizing:border-box}
+#templateSettings .template-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+#templateSettings .template-actions button{min-height:40px}
