@@ -82,3 +82,30 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 #templateSettings #templateType{width:100%;max-width:100%;box-sizing:border-box}
 #templateSettings .template-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 #templateSettings .template-actions button{min-height:40px}
+
+/* Detail popup: clear cursor feedback without changing button actions */
+.report-modal .report-modal-actions button,
+.report-modal .report-modal-close{
+  cursor:pointer!important;
+  transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,filter .18s ease!important;
+  transform:translateY(0);
+  will-change:transform;
+}
+.report-modal .report-modal-actions button:hover:not(:disabled),
+.report-modal .report-modal-close:hover:not(:disabled){
+  transform:translateY(-3px);
+  box-shadow:0 9px 20px rgba(29,57,110,.18);
+  filter:brightness(.96);
+}
+.report-modal .report-modal-actions .primary:hover:not(:disabled){filter:brightness(1.09);box-shadow:0 10px 23px rgba(47,101,218,.3)}
+.report-modal .report-modal-actions .danger:hover:not(:disabled){filter:brightness(1.08);box-shadow:0 10px 23px rgba(175,35,57,.28)}
+.report-modal .report-modal-actions button:active:not(:disabled),
+.report-modal .report-modal-close:active:not(:disabled){transform:translateY(1px) scale(.97);box-shadow:0 2px 7px rgba(29,57,110,.13)}
+.report-modal .report-modal-actions button:focus-visible,
+.report-modal .report-modal-close:focus-visible{outline:3px solid #8eb3ff!important;outline-offset:3px}
+.report-modal .report-modal-actions button:disabled,
+.report-modal .report-modal-close:disabled{cursor:not-allowed!important;opacity:.55;filter:none;transform:none;box-shadow:none}
+@media(prefers-reduced-motion:reduce){
+ .report-modal .report-modal-actions button,.report-modal .report-modal-close{transition:none!important;will-change:auto}
+ .report-modal .report-modal-actions button:hover:not(:disabled),.report-modal .report-modal-close:hover:not(:disabled){transform:none}
+}
