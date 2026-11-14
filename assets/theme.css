@@ -62,3 +62,13 @@ html[data-theme="dark"] .settings-layout .card,
 html[data-theme="dark"] .settings-layout p{color:#d7e4f6}
 html[data-theme="dark"] .table tbody tr.report-row-waiting>td{color:#ffe1a2}
 html[data-theme="dark"] .table tbody tr.report-row-done>td{color:#b3f2d6}
+
+/* Keep native calendar-picker glyph visible against dark date fields (Chromium/Edge). */
+html[data-theme="dark"] input[type="date"]{color-scheme:dark!important;color:#f0f5ff!important;background-color:#101c30!important}
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1) brightness(1.7)!important;opacity:1!important;cursor:pointer}
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:.8!important}
+html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit,
+html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-text,
+html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-month-field,
+html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-day-field,
+html[data-theme="dark"] input[type="date"]::-webkit-datetime-edit-year-field{color:#f0f5ff!important}
