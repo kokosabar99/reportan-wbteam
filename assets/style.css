@@ -291,3 +291,7 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 #content .settings-layout:has([data-settings-panel]){width:100%;max-width:760px;margin-left:auto;margin-right:auto;box-sizing:border-box}
 #content .settings-layout [data-settings-panel]{max-width:100%;min-width:0}
 @media(max-width:620px){#content .settings-tabs{justify-content:center}#content .settings-tab{flex:1 1 auto;text-align:center}}
+
+/* Readable header date/time chip: stronger contrast, larger type and spacing. */
+header .header-tools #clock{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;background:#fff;color:#1d3558;border:1px solid #cbd8ed;border-radius:12px;font-size:14px;font-weight:700;letter-spacing:.15px;line-height:1.35;white-space:nowrap;font-variant-numeric:tabular-nums;box-shadow:0 3px 12px #29476a12}
+@media(max-width:620px){header .header-tools #clock{font-size:12px;padding:9px 11px;min-height:38px}}
