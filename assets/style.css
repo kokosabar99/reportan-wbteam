@@ -27,3 +27,11 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .settings-layout{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:20px}
 .password-wrap{display:flex;position:relative;align-items:center}.password-wrap input{padding-right:54px}.eye-toggle{position:absolute;right:8px;background:transparent;color:inherit;padding:10px;border-radius:8px}.danger{background:#a72535!important}
 @media(max-width:600px){.history-filters{grid-template-columns:1fr}.category-tabs button{flex:1;min-width:0}}[hidden]{display:none!important}
+
+/* Compact, consistent category history filters */
+.category-history .history-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;align-items:end;margin-bottom:12px}
+.category-history .history-filters input,.category-history .history-filters select{box-sizing:border-box;width:100%;min-width:0;height:40px;min-height:40px;padding:8px 12px;font-size:13px;margin:0}
+.category-history .history-filters label{display:flex;flex-direction:column;gap:4px;min-width:0;font-size:12px;font-weight:600}
+.category-history .history-filters button{height:38px;min-height:38px;padding:7px 12px;font-size:13px;margin:0}
+.category-history .history-filters input[type=date]{color-scheme:light}
+@media(max-width:640px){.category-history .history-filters{grid-template-columns:minmax(0,1fr)}.category-history .history-filters button{width:100%}}
