@@ -141,3 +141,8 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .report-detail-content .report-detail-link{font:inherit;font-weight:700;color:#245ed4;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .report-detail-content .report-detail-link:hover{color:#123e99;text-decoration-thickness:2px}
 .report-detail-content .report-detail-link:focus-visible{outline:2px solid #2c65dc;outline-offset:3px;border-radius:2px}
+
+/* Modal stacking: detail < action dialogs < feedback toast. */
+.report-modal-backdrop{z-index:2147483644!important}
+.completion-backdrop,.delete-report-backdrop{z-index:2147483646!important}
+#toast{z-index:2147483647!important}
