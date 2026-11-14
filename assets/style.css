@@ -295,3 +295,13 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 /* Readable header date/time chip: stronger contrast, larger type and spacing. */
 header .header-tools #clock{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;background:#fff;color:#1d3558;border:1px solid #cbd8ed;border-radius:12px;font-size:14px;font-weight:700;letter-spacing:.15px;line-height:1.35;white-space:nowrap;font-variant-numeric:tabular-nums;box-shadow:0 3px 12px #29476a12}
 @media(max-width:620px){header .header-tools #clock{font-size:12px;padding:9px 11px;min-height:38px}}
+
+/* Ganti Rekening PL only: dates are side by side, left and right. */
+#content .category-history.pl-history .history-filters{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px 14px!important}
+#content .category-history.pl-history .history-filters>.category-search-row{grid-column:1/-1!important;grid-row:1!important;min-width:0}
+#content .category-history.pl-history .history-filters>label:has(#categoryFrom){grid-column:1!important;grid-row:2!important;min-width:0}
+#content .category-history.pl-history .history-filters>label:has(#categoryTo){grid-column:2!important;grid-row:2!important;min-width:0}
+#content .category-history.pl-history .history-filters>#categoryLoad{grid-column:1!important;grid-row:3!important}
+#content .category-history.pl-history .history-filters>#categoryReset{grid-column:2!important;grid-row:3!important}
+#content .category-history.pl-history .history-filters input[type="date"]{width:100%;min-width:0;box-sizing:border-box}
+@media(max-width:460px){#content .category-history.pl-history .history-filters{gap:9px!important}#content .category-history.pl-history .history-filters>label{font-size:12px}#content .category-history.pl-history .history-filters input[type="date"]{font-size:12px;padding:9px 7px}}
