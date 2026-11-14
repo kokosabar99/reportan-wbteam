@@ -97,3 +97,24 @@ html[data-theme="dark"] .sidebar-toggle:hover{background:#305078}
 #app.sidebar-collapsed>aside .sidebottom{margin-top:0;padding-top:0}
 #app.sidebar-collapsed>aside .sidebottom button{width:46px}
 }
+
+/* Dark modal contrast: override the inline light-only detail background. */
+html[data-theme="dark"] .report-modal{background:#152238!important;color:#edf4ff!important;border:1px solid #3a5070!important}
+html[data-theme="dark"] .report-modal-header{background:#192943!important;border-bottom:1px solid #354b69!important}
+html[data-theme="dark"] .report-modal-header h2,html[data-theme="dark"] .report-modal-header h2 small,
+html[data-theme="dark"] .resolution-heading h3{color:#f3f7ff!important;opacity:1!important}
+html[data-theme="dark"] .report-modal-kicker{color:#8fb4ff!important}
+html[data-theme="dark"] .report-modal-meta,html[data-theme="dark"] .report-modal-meta span{color:#c4d5ed!important}
+html[data-theme="dark"] .report-detail-content{background:#101c30!important;color:#e8f0ff!important;border-color:#3a5273!important}
+html[data-theme="dark"] .report-detail-content .report-detail-link{color:#8abaff!important}
+html[data-theme="dark"] .report-modal-actions{background:#152238!important;border-top:1px solid #354b69!important}
+html[data-theme="dark"] .resolution-card{background:#12302d!important;border-color:#2d7161!important;color:#e5fff5!important}
+html[data-theme="dark"] .resolution-heading{border-bottom-color:#326d61!important}
+html[data-theme="dark"] .resolution-kicker{color:#8af0c8!important}
+html[data-theme="dark"] .resolution-label{color:#a8d4c6!important}
+html[data-theme="dark"] .resolution-info strong,html[data-theme="dark"] .resolution-info p{color:#edfff8!important}
+html[data-theme="dark"] .resolution-badge{background:#205b48!important;color:#b5f7d9!important}
+html[data-theme="dark"] .report-modal-close{background:#283b58!important;color:#f0f6ff!important;border-color:#415b7c!important}
+html[data-theme="dark"] .completion-panel,html[data-theme="dark"] .edit-report-dialog,html[data-theme="dark"] .delete-report-dialog{background:#152238!important;color:#edf4ff!important}
+html[data-theme="dark"] .completion-panel h2,html[data-theme="dark"] .edit-report-dialog h2,html[data-theme="dark"] .delete-report-dialog h2{color:#f3f7ff!important}
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator{filter:brightness(0) invert(1)!important;opacity:1!important}
