@@ -60,6 +60,16 @@ const name=String(body.full_name||'').trim(),username=String(body.username||'').
 const wl=await db.prepare('SELECT id,password_hash,active FROM staff WHERE lower(full_name)=lower(?)').bind(name).first();if(!wl||!wl.active||wl.password_hash)return fail('Nama belum di-whitelist atau sudah digunakan',403);
 try{const result=await db.prepare('UPDATE staff SET username=?,password_hash=? WHERE id=? AND password_hash IS NULL RETURNING id').bind(username,await hashPassword(pass),wl.id).run();if(!result.meta.changes)return fail('Staff sudah terdaftar',409);return json({ok:true})}catch{return fail('Username sudah dipakai')}}
 const staff=await auth(request,db);if(!staff)return fail('Silakan login',401);
+if(route==='report-templates'&&(method==='GET'||method==='PUT')){
+ await sql.query("CREATE TABLE IF NOT EXISTS report_templates (type TEXT PRIMARY KEY, template TEXT NOT NULL, updated_by BIGINT REFERENCES staff(id), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+ if(method==='GET'){const rows=await sql.query('SELECT type,template FROM report_templates');return json({items:rows})}
+ if(!['KAPTEN KASIR','CS LINE'].includes(staff.role))return fail('Hanya Kapten Kasir dan CS Line',403);
+ const type=String(body.type||''),template=String(body.template??'');
+ if(!types.includes(type))return fail('Kategori tidak valid');
+ if(template.length>10000)return fail('Format terlalu panjang (maksimal 10000 karakter)');
+ await sql.query('INSERT INTO report_templates(type,template,updated_by,updated_at) VALUES($1,$2,$3,NOW()) ON CONFLICT(type) DO UPDATE SET template=EXCLUDED.template,updated_by=EXCLUDED.updated_by,updated_at=NOW()',[type,template,staff.id]);
+ return json({ok:true});
+}
 if(route==='me'&&method==='GET')return json({staff});
 if(route==='logout'&&method==='POST'){const t=(request.headers.get('authorization')||'').slice(7);await db.prepare('DELETE FROM sessions WHERE token_hash=? RETURNING token_hash').bind(await sha(t)).run();return json({ok:true})}
 if(route==='staff'&&method==='GET'){if(!staff.can_manage)return fail('Tidak diizinkan',403);return json({items:(await db.prepare('SELECT id,full_name,username,role,active,can_manage,created_at FROM staff ORDER BY id DESC').all()).results})}
@@ -99,10 +109,18 @@ if(reportMatch&&(method==='PATCH'||method==='DELETE')){
  const id=Number(reportMatch[1]);const found=await sql.query('SELECT id,created_by,type,details FROM reports WHERE id=$1',[id]);if(!found.length)return fail('Laporan tidak ditemukan',404);
  if(Number(found[0].created_by)!==Number(staff.id)&&!['KAPTEN KASIR','CS LINE'].includes(staff.role))return fail('Tidak diizinkan mengubah laporan staff lain',403);
  if(method==='DELETE'){await sql.query('DELETE FROM audit WHERE report_id=$1',[id]);await sql.query('DELETE FROM reports WHERE id=$1',[id]);return json({ok:true})}
- const user=String(body.user_id||'').trim(),description=String(body.description||'').trim();if(!user&&found[0].type!=='PERMAINAN')return fail('User ID wajib');
- const details=typeof found[0].details==='object'&&found[0].details?found[0].details:{};
- details.description=description;
- await sql.query('UPDATE reports SET user_id=$1,details=$2::jsonb WHERE id=$3',[user||null,JSON.stringify(details),id]);
+ const current=found[0],type=current.type;
+ const user=String(body.user_id??current.user_id??'').trim(),proof=String(body.proof??current.proof??'').trim(),subtype=String(body.subtype??current.subtype??'').trim();
+ const nominal=body.nominal===undefined?current.nominal:(body.nominal===''?null:Number(String(body.nominal).replace(/[^\\d]/g,'')));
+ const details=typeof current.details==='object'&&current.details?{...current.details}:{};
+ if(body.details&&typeof body.details==='object'){for(const k of ['description','withdraw_date','order_id','old_account','new_account','provider'])if(Object.hasOwn(body.details,k))details[k]=String(body.details[k]??'').trim()}
+ if(body.description!==undefined)details.description=String(body.description??'').trim();
+ if(!user&&!(type==='PERMAINAN'&&subtype==='SITUS'))return fail('User ID wajib');
+ if(nominal!==null&&(!Number.isSafeInteger(nominal)||nominal<0))return fail('Nominal tidak valid');
+ if(type==='WITHDRAW'&&(!nominal||!details.withdraw_date||!details.order_id||!proof))return fail('Lengkapi data Kendala Withdraw');
+ if(type==='GANTI_REKENING'&&(!details.old_account||!details.new_account))return fail('Rekening lama dan baru wajib');
+ if(type==='PERMAINAN'&&(!['PL','SITUS'].includes(subtype)||(subtype==='SITUS'&&!details.provider)))return fail('Lengkapi data Kendala Permainan');
+ await sql.query('UPDATE reports SET user_id=$1,nominal=$2,proof=$3,subtype=$4,details=$5::jsonb WHERE id=$6',[user||null,nominal,proof||null,subtype||null,JSON.stringify(details),id]);
  return json({ok:true});
 }
 if(route==='reports'&&method==='GET'){
