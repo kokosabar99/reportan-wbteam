@@ -60,3 +60,10 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 #toast{z-index:2147483647!important;font-weight:400!important;line-height:1.5;pointer-events:none;max-width:min(420px,calc(100vw - 32px));box-sizing:border-box}
 .report-modal-body pre,.report-modal-body pre *{font-weight:400!important;font-style:normal;letter-spacing:normal}
 .report-modal-body pre{font-family:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* Compact, accessible clear action on every report-history search field. */
+.search-clear-wrap{position:relative;display:block;flex:1;min-width:0}
+.search-clear-wrap>input{width:100%;box-sizing:border-box;padding-right:44px!important}
+.search-clear-wrap>input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.search-clear-btn{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:30px;height:30px;display:grid;place-items:center;border:0;border-radius:8px;background:#edf2fa;color:#5a6c86;font-size:21px;font-weight:400;line-height:1;cursor:pointer;padding:0}
+.search-clear-btn:hover,.search-clear-btn:focus-visible{background:#dfe9fb;color:#2754ad;outline:2px solid transparent}
