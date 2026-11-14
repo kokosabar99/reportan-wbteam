@@ -177,3 +177,6 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .table tbody tr.report-row-waiting:hover > td{background:#fff0ce!important}
 .table tbody tr.report-row-done:hover > td{background:#ddf2e6!important}
 .table tbody tr.report-row-note:hover > td{background:#f5f8fd!important}
+
+/* Center the empty-report message across the complete table, regardless of column widths. */
+.table tbody tr:has(> td.empty) > td.empty{display:table-cell!important;width:auto!important;min-width:0!important;text-align:center!important;vertical-align:middle!important;padding:24px 12px!important;color:#64748b}
