@@ -146,3 +146,8 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .report-modal-backdrop{z-index:2147483644!important}
 .completion-backdrop,.delete-report-backdrop{z-index:2147483646!important}
 #toast{z-index:2147483647!important}
+
+/* Staff edit/delete dialogs */
+.staff-dialog-backdrop{position:fixed;inset:0;z-index:99999;background:rgba(15,29,53,.60);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px}
+.staff-dialog{background:#fff;color:#20304c;width:min(100%,510px);max-height:90vh;overflow:auto;border-radius:22px;padding:30px;box-shadow:0 24px 90px rgba(10,27,58,.25)}
+.staff-dialog h2{margin:0 0 12px}.staff-dialog label{display:block;margin-top:16px}.staff-dialog input,.staff-dialog select{width:100%;box-sizing:border-box}.staff-dialog .row{display:flex;gap:12px;flex-wrap:wrap}.table td .row{display:flex;gap:8px;flex-wrap:nowrap}.table td .row button{white-space:nowrap}
