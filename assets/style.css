@@ -223,3 +223,29 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
   .category-history .history-filters #categoryReset{grid-column:auto;grid-row:auto}
   .category-history .history-filters:not(:has(.category-status-row)) .category-search-row{grid-column:1 / -1;grid-row:auto}
 }
+
+/* Staff directory action buttons: balanced sizing, spacing and no clipping. */
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table th:nth-child(4){width:30%}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table th:first-child{width:32%}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table th:nth-child(2){width:18%}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table th:nth-child(3){width:20%}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table td:last-child{padding:10px 8px}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table td .row{
+  display:flex;flex-wrap:nowrap;justify-content:flex-start;align-items:center;gap:6px;min-width:0
+}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table td .row button{
+  flex:1 1 0;min-width:0;max-width:110px;min-height:36px;
+  display:inline-flex;justify-content:center;align-items:center;
+  gap:4px;padding:7px 6px;font-size:12px;line-height:1.2;
+  border-radius:10px;white-space:nowrap
+}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table td [data-staff-delete]{
+  background:#fff0f1;color:#b4233b;border:1px solid #ffd5db
+}
+#content > .columns:has(#wlForm) > .card:nth-child(2) .table td [data-staff-delete]:hover{
+  background:#ffe1e6;color:#92182c
+}
+@media(max-width:460px){
+  #content > .columns:has(#wlForm) > .card:nth-child(2) .table td .row{flex-wrap:wrap}
+  #content > .columns:has(#wlForm) > .card:nth-child(2) .table td .row button{flex:1 1 100%}
+}
