@@ -55,3 +55,8 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 
 /* Full-report editor: compact responsive modal */
 .edit-report-panel{width:min(100%,650px);max-height:min(90vh,850px);display:flex;flex-direction:column}.edit-report-panel form{min-height:0;display:flex;flex-direction:column}.edit-report-fields{overflow:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;padding:3px 3px 12px}.edit-report-fields label{font-size:12px;margin:6px 0 0;align-self:end}.edit-report-fields input,.edit-report-fields select,.edit-report-fields textarea{width:100%;min-width:0;box-sizing:border-box;border:1px solid #d8e3f3;border-radius:10px;background:#f8faff;padding:11px 12px;font:inherit;color:#203451}.edit-report-fields textarea{min-height:80px;resize:vertical}.edit-report-fields input:focus,.edit-report-fields select:focus,.edit-report-fields textarea:focus{outline:2px solid #b4c8ff;border-color:#4275eb}.edit-report-panel .completion-actions{padding-top:12px;border-top:1px solid #edf1f8}@media(max-width:540px){.edit-report-fields{grid-template-columns:1fr}.edit-report-panel{max-height:94vh}}
+
+/* Keep feedback visible over report and edit dialogs; readable normal-weight report text. */
+#toast{z-index:2147483647!important;font-weight:400!important;line-height:1.5;pointer-events:none;max-width:min(420px,calc(100vw - 32px));box-sizing:border-box}
+.report-modal-body pre,.report-modal-body pre *{font-weight:400!important;font-style:normal;letter-spacing:normal}
+.report-modal-body pre{font-family:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',monospace;font-size:13px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
