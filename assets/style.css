@@ -129,3 +129,9 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 .delete-report-actions button:focus-visible{outline:3px solid #93b5ff;outline-offset:3px}
 .delete-report-actions button:disabled{opacity:.65;cursor:wait}
 @media(max-width:500px){.delete-report-panel{padding:22px}.delete-report-actions{flex-wrap:wrap}.delete-report-actions button{flex:1}}
+
+/* Separate search clear button from the input field, keeping both on one row. */
+.search-clear-wrap{display:flex!important;align-items:center;gap:8px;position:relative;min-width:0}
+.search-clear-wrap>input{flex:1 1 auto;min-width:0;width:auto!important;padding-right:12px!important}
+.search-clear-wrap>.search-clear-btn{position:static!important;transform:none!important;flex:0 0 38px;width:38px;height:38px;border:1px solid #dce5f2;border-radius:11px;background:#eef3fa;color:#526986;box-shadow:none}
+.search-clear-wrap>.search-clear-btn:hover,.search-clear-wrap>.search-clear-btn:focus-visible{background:#dce9ff;color:#2859bf;border-color:#b9cdf3;outline-offset:2px}
