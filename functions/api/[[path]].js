@@ -99,10 +99,18 @@ if(reportMatch&&(method==='PATCH'||method==='DELETE')){
  const id=Number(reportMatch[1]);const found=await sql.query('SELECT id,created_by,type,details FROM reports WHERE id=$1',[id]);if(!found.length)return fail('Laporan tidak ditemukan',404);
  if(Number(found[0].created_by)!==Number(staff.id)&&!['KAPTEN KASIR','CS LINE'].includes(staff.role))return fail('Tidak diizinkan mengubah laporan staff lain',403);
  if(method==='DELETE'){await sql.query('DELETE FROM audit WHERE report_id=$1',[id]);await sql.query('DELETE FROM reports WHERE id=$1',[id]);return json({ok:true})}
- const user=String(body.user_id||'').trim(),description=String(body.description||'').trim();if(!user&&found[0].type!=='PERMAINAN')return fail('User ID wajib');
- const details=typeof found[0].details==='object'&&found[0].details?found[0].details:{};
- details.description=description;
- await sql.query('UPDATE reports SET user_id=$1,details=$2::jsonb WHERE id=$3',[user||null,JSON.stringify(details),id]);
+ const current=found[0],type=current.type;
+ const user=String(body.user_id??current.user_id??'').trim(),proof=String(body.proof??current.proof??'').trim(),subtype=String(body.subtype??current.subtype??'').trim();
+ const nominal=body.nominal===undefined?current.nominal:(body.nominal===''?null:Number(String(body.nominal).replace(/[^\\d]/g,'')));
+ const details=typeof current.details==='object'&&current.details?{...current.details}:{};
+ if(body.details&&typeof body.details==='object'){for(const k of ['description','withdraw_date','order_id','old_account','new_account','provider'])if(Object.hasOwn(body.details,k))details[k]=String(body.details[k]??'').trim()}
+ if(body.description!==undefined)details.description=String(body.description??'').trim();
+ if(!user&&!(type==='PERMAINAN'&&subtype==='SITUS'))return fail('User ID wajib');
+ if(nominal!==null&&(!Number.isSafeInteger(nominal)||nominal<0))return fail('Nominal tidak valid');
+ if(type==='WITHDRAW'&&(!nominal||!details.withdraw_date||!details.order_id||!proof))return fail('Lengkapi data Kendala Withdraw');
+ if(type==='GANTI_REKENING'&&(!details.old_account||!details.new_account))return fail('Rekening lama dan baru wajib');
+ if(type==='PERMAINAN'&&(!['PL','SITUS'].includes(subtype)||(subtype==='SITUS'&&!details.provider)))return fail('Lengkapi data Kendala Permainan');
+ await sql.query('UPDATE reports SET user_id=$1,nominal=$2,proof=$3,subtype=$4,details=$5::jsonb WHERE id=$6',[user||null,nominal,proof||null,subtype||null,JSON.stringify(details),id]);
  return json({ok:true});
 }
 if(route==='reports'&&method==='GET'){
