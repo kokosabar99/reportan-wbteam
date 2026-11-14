@@ -180,3 +180,12 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 
 /* Center the empty-report message across the complete table, regardless of column widths. */
 .table tbody tr:has(> td.empty) > td.empty{display:table-cell!important;width:auto!important;min-width:0!important;text-align:center!important;vertical-align:middle!important;padding:24px 12px!important;color:#64748b}
+
+/* Settings: three independent actions, one visible form at a time. */
+.settings-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.settings-tab{border:1px solid #d9e3f4;border-radius:12px;background:#f1f5fb;color:#435674;font:inherit;font-weight:700;padding:12px 18px;cursor:pointer;transition:background .18s,transform .18s,box-shadow .18s}
+.settings-tab:hover{background:#e4edff;transform:translateY(-1px)}
+.settings-tab.active{background:#315fdf;color:white;border-color:#315fdf;box-shadow:0 6px 15px #315fdf25}
+.settings-layout:has([data-settings-panel]){display:block;max-width:760px}
+.settings-layout [data-settings-panel][hidden]{display:none!important}
+.settings-layout [data-settings-panel]{width:100%;box-sizing:border-box}
