@@ -155,3 +155,17 @@ html{scroll-behavior:smooth}body{background:linear-gradient(135deg,#f5f8fd 0%,#e
 /* Premium completion detail for issue reports */
 .resolution-card{margin-top:20px;border:1px solid #cde9dd;border-radius:18px;padding:20px 22px;background:linear-gradient(145deg,#f4fcf8,#fff);box-shadow:0 8px 24px rgba(17,120,77,.06);color:#213b35}
 .resolution-heading{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #dbeee5}.resolution-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#d9f5e8;color:#087e54;font-size:24px;font-weight:700}.resolution-kicker{font-size:11px;letter-spacing:1.2px;font-weight:800;color:#078455}.resolution-heading h3{margin:3px 0 0;font-size:18px;color:#193e31}.resolution-badge{margin-left:auto;background:#d9f5e8;color:#087e54;border-radius:30px;padding:7px 12px;font-size:11px;font-weight:800}.resolution-info{display:flex;flex-direction:column;gap:5px;margin-top:15px}.resolution-label{font-size:12px;font-weight:700;color:#658479}.resolution-info strong{font-size:15px;color:#23443a}.resolution-info p{margin:0;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;color:#23443a}
+
+/* Staff directory: fit all four columns inside its card without horizontal scrolling. */
+#content > .columns > .card:nth-child(2) .tablewrap{overflow-x:visible;max-width:100%;}
+#content > .columns > .card:nth-child(2) .table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse;}
+#content > .columns > .card:nth-child(2) .table th:first-child,
+#content > .columns > .card:nth-child(2) .table td:first-child{min-width:0;width:35%;}
+#content > .columns > .card:nth-child(2) .table th:nth-child(2){width:19%;}
+#content > .columns > .card:nth-child(2) .table th:nth-child(3){width:21%;}
+#content > .columns > .card:nth-child(2) .table th:nth-child(4){width:25%;}
+#content > .columns > .card:nth-child(2) .table th,
+#content > .columns > .card:nth-child(2) .table td{padding:11px 8px;white-space:normal;overflow-wrap:anywhere;vertical-align:middle;font-size:12px;}
+#content > .columns > .card:nth-child(2) .table td .row{display:flex;flex-wrap:wrap;gap:5px;}
+#content > .columns > .card:nth-child(2) .table td .row button{font-size:12px;padding:7px 9px;min-width:0;white-space:nowrap;}
+@media(max-width:1100px){#content > .columns:has(#wlForm){grid-template-columns:minmax(0,1fr)}#content > .columns > .card:nth-child(2) .table th,#content > .columns > .card:nth-child(2) .table td{font-size:13px;padding:12px 10px}}
